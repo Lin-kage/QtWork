@@ -1,0 +1,6 @@
+press_space: 500 426
+
+new_game_button: 353 384
+load_game_button: 647 384
+tutorial_button: 353 458
+options_button: 647 458
