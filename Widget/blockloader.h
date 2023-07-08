@@ -88,7 +88,7 @@ public:
     void generate_block(Block* upper = nullptr);
 
     // 在指定位置强制生成一个Block，会储存在generate_later中
-    void generate_block_forced(int x_center, int code, Block* upper = nullptr);
+    void generate_block_forced(int x_center, int code, Block* upper = nullptr, double velocity = -100);
 
     // 将generate_later的Block放入block_list中
     void generate_block_saved(Block *upper = nullptr) {

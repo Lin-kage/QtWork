@@ -95,6 +95,7 @@ void Widget::main_timer_event()
     case Gaming:
         switch (_game_condition) {
         case GameHeroEnter:
+            _game_loader._hero->in_stage(_game_loader._stage_big);
             _game_loader._hero->update();
             _music_player.stage_play();
             _game_background.load_stage(_game_loader._stage_big);
@@ -116,15 +117,7 @@ void Widget::main_timer_event()
         case GameEnemyFlee:
             if (_game_loader.enemy_flee())
             {
-                if (_game_loader.is_stage_boss())
-                {
-                    _game_loader._stage_big++;
-                    _game_loader._stage_small = 1;
-                }
-                else
-                {
-                    _game_loader._stage_small++;
-                }
+                _game_loader._stage_small++;
                 _game_loader._upgraded = 0;
                 set_game_condition(GameUpgrade);
             }
@@ -145,7 +138,10 @@ void Widget::main_timer_event()
                 else
                 {
                     set_game_condition(GameStageClear);
-                    _game_setting.update();
+                    _game_loader._stage_small = 1;
+                    _game_loader._stage_big++;
+                    if (_game_loader._stage_big < 5)
+                        _game_setting.update();
                 }
             }
             break;
@@ -188,7 +184,7 @@ void Widget::main_timer_event()
             }
             break;
         case GameStageWon:
-            if (_game_loader._stage_big == 4)
+            if (_game_loader._stage_big == 5)
             {
                 _game_loader.game_won();
                 set_game_condition(GameWon);

@@ -55,16 +55,16 @@ const int Block_Width[Block_Kinds]{ 0,
     100, 80
 };
 const int Block_Height[Block_Kinds]{ 0,
-    100, 100, 100, 100,
-    100, 100, 100, 100,
+    95, 95, 95, 95,
+    95, 95, 95, 95,
 
-    100, 100, 100, 100,
-    100, 100, 100, 100,
-    100, 100, 100, 100,
-    100, 100, 100, 100,
-    100, 100, 100, 100,
-
-    100, 100
+    95, 95, 95, 95,
+    95, 95, 95, 95,
+    95, 95, 95, 95,
+    95, 95, 95, 95,
+    95, 95, 95, 95,
+    
+    95, 95
 };
 const double Block_Frequancy[Block_Kinds]{ 0,
     10, 10, 5, 8,
@@ -95,18 +95,41 @@ const QString Block_Path[Block_Kinds]{
 
     "picture/block/WHITENormalBlock1.png",
     "picture/block/WHITENormalBlock2.png",
-    "picture/block/WHITECriticBlock1.png",
-    "",
+    "picture/block/WHITECriticalBlock.png",
+    "picture/block/WHITESolidBlock1.png",
 
-    "",
-    "",
-    "",
-    "",
+    "picture/block/WHITESolidBlock2.png",
+    "picture/block/HealingBlock.png",
+    "picture/block/WHITEShieldBlock.png",
+    "picture/block/LavaBlock.png",
 
     "picture/block/REDNormalBlock1.png",
     "picture/block/REDNormalBlock2.png",
     "picture/block/REDFastBlock1.png",
     "picture/block/REDFastBlock2.png",
+
+    "picture/block/REDBombBlock.png",
+    "picture/block/REDSolidBlock1.png",
+    "picture/block/REDSolidBlock2.png",
+    "picture/block/REDCriticalBlock.png",
+
+    "picture/block/REDSlimeBlock.png",
+    "picture/block/REDGooBlock.png",
+    "picture/block/REDShieldBlock.png",
+    "picture/block/REDFireballBlock.png",
+
+    "picture/block/REDIceballBlock.png",
+    "picture/block/REDArmorBlock.png",
+    "picture/block/REDBowBlock.png",
+    "picture/block/REDArrowBlock.png",
+
+    "picture/block/REDSoulingBlock1.png",
+    "picture/block/REDSoulingBlock2.png",
+    "picture/block/REDBoneBlock.png",
+    "picture/block/REDDustBlock.png",
+
+    "picture/block/REDDeadBlock.png",
+    "picture/block/WHITESwordBlock.png",
 };
 
 const std::vector<int> White_Blocks {WHITENormalBlock1, WHITENormalBlock2, WHITECriticBlock};
@@ -116,27 +139,26 @@ const std::vector<int> Red_Blocks {REDNormalBlock1, REDNormalBlock2, REDFastBloc
 
 // Upgrade Settings
 
-const int Upgrade_String_num = 5;
+const int Upgrade_String_num = 4;
 
-enum { RaiseMaxHealth, RaiseMaxAttack, RaiseBothAttack, Heal, RaiseMagicAttack };
+enum { RaiseMaxHealth, RaiseBothAttack, Heal, RaiseMagicAttack };
 
 const QString Upgrade_Strings[Upgrade_String_num]{
     "Raise max health by",
-    "Raise max attack by",
-    "Raise both max and min attack by",
+    "Raise attack by",
     "Heal to full health",
     "Raise skill attack by"
 };
 
 const double upgrade_index[]{ 0,
-    1.00, 1.10, 1.46, 1.95, 2.86,
-    3.80, 5.06, 7.44, 9.89, 13.16,
-    19.34, 25.72, 34.21, 37.63, 41.39,
-    45.53, 50.09, 52.59, 55.22, 57.98,
-    60.88, 61.49, 62.11, 62.73, 63.35, 
-    63.99, 64.63, 65.27, 65.93, 66.59,
-    67.25, 67.92, 68.60, 69.29, 69.98, 
-    70.68, 71.39, 72.10, 72.82, 73.55, 74.29
+    1.00, 1.20, 1.42, 1.66, 1.90,
+    2.30, 2.66, 2.97, 3.39, 4.00,
+    4.83, 5.32, 5.91, 6.63, 7.39,
+    8.00, 8.82, 9.78, 10.52, 11.50,
+    12.53, 13.66, 14.80, 16.00, 17.34, 
+    18.67, 20.23, 22.00, 24.30, 26.50,
+    28.00, 30.34, 33.00, 36.21, 39.97, 
+    43.12, 46.51, 49.21, 53.34, 59.12, 65.00
 };
 
 const int Upgrade_Range_Min = 30, Upgrade_Range_Max = 40;
@@ -238,10 +260,10 @@ const QString ImgAddress[]{
 const int EnemyMaxHealth[]{
     40,         // default
 
-    60, 100, 60, 80, 60, 160, 150,
-    80, 120, 120, 100, 230, 160,
+    60, 100, 60, 80, 60, 220, 200,
+    80, 120, 120, 100, 280, 220,
     120, 120, 100, 160, 250, 200,
-    160, 160, 140, 110, 320, 500
+    160, 160, 40, 110, 320, 500
 };
 
 const int EnemyAttack[][2]{
@@ -296,11 +318,11 @@ const int EnemyColdTime[][2]{
     {115, 20},
     {105, 40},
 
-    {135, 40},
-    {85, 40},
-    {135, 40},
-    {185, 100},
-    {100, 5},
+    {125, 40},
+    {95, 40},
+    {125, 40},
+    {125, 100},
+    {90, 5},
     {105, 40},
 
     {130, 40},
@@ -337,7 +359,7 @@ const std::vector<int> EnemyBlocks[]{
     {9, 11, 12},
 
     {9, 10, 11, 13, 19},
-    {19, 24},
+    {13, 19, 24},
     {14, 20, 21, 25},
     {13, 14, 19},
     {22, 23},

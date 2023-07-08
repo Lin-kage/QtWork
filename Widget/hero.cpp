@@ -49,7 +49,6 @@ Hero::Hero(QWidget *parent, int max_health, int min_attack, int max_attack, int 
     _attack_info = new QLabel(_parent);
     _attack_info->setGeometry(Left_Attack_Info_X_Center - Left_Attack_Info_Width / 2, Left_Attack_Info_Y_Center - Left_Attack_Info_Height / 2,
                               Left_Attack_Info_Width, Left_Attack_Info_Height);
-    _attack_info->setFrameStyle(QFrame::Box);
     _attack_info->setFont(QFont(QFontDatabase::applicationFontFamilies(1).at(0), 30));
     _attack_info->setAlignment(Qt::AlignCenter);
     _attack_info->setText(QString::number(_attack_low) + " - " + QString::number(_attack_high));
@@ -93,6 +92,10 @@ Hero::Hero(QWidget *parent, int max_health, int min_attack, int max_attack, int 
     this->setAttribute(Qt::WA_TranslucentBackground);
 
     this->setPixmap(*_image);
+
+    _shield = new QLabel(_parent);
+    _shield->setGeometry(Hero_X_Center - 66, Hero_Y_Bottom - Hero_Height / 2 - 66, 132, 132);
+    _shield->setPixmap(QPixmap("picture/icon/bubble_shield.png"));
 }
 
 void Hero::update()
@@ -119,12 +122,9 @@ void Hero::update()
     {
         _trick_bar_container->setPixmap(QPixmap("picture/icon/special_trick_bar_container.png"));
         _trick_bar->setPixmap(QPixmap("picture/icon/special_trick_bar.png"));
-        _trick_bar->setGeometry(_trick_bar->x(), _trick_bar->y(), 95 * (1.0 + 1.0 * attackage_magic_dynamic(_magic_attack, _hit_count) / attackage_magic_dynamic(_magic_attack, 60)), _trick_bar->height());
+        _trick_bar->setGeometry(_trick_bar->x(), _trick_bar->y(), 95 * (1.0 + 1.0 * (attackage_magic_dynamic(_magic_attack, _hit_count) - attackage_magic_dynamic(_magic_attack, 5)) / (attackage_magic_dynamic(_magic_attack, 60))), _trick_bar->height());
         _magic_attack_info->setText(QString::number(attackage_magic_dynamic(_magic_attack, _hit_count)));
     }
 
-    if (_shield_on)
-        setFrameStyle(QFrame::Box);
-    else
-        setFrameStyle(QFrame::NoFrame);
+    _shield->setVisible(_shield_on);
 }

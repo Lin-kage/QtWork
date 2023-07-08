@@ -10,7 +10,10 @@ class HoverButton :
     Q_OBJECT
 
 public:
-    HoverButton(QWidget* parent = nullptr) : QPushButton(parent) { } 
+    HoverButton(QWidget* parent = nullptr) : QPushButton(parent) { 
+        this->setFlat(true); 
+        this->setStyleSheet("background:transparent");
+    }
 
 signals:
     void leave();

@@ -13,6 +13,9 @@ int main(int argc, char *argv[])
     QApplication a(argc, argv);
     Widget w;
 
+    w.setWindowTitle(QString("Nile\'s Lengend of Sword"));
+    w.setWindowIcon(QPixmap("picture/icon/title_icon.png"));
+
     qDebug() << QFontDatabase::addApplicationFont(QCoreApplication::applicationDirPath() + "/font/Mouse.otf");
     qDebug() << QFontDatabase::addApplicationFont(QCoreApplication::applicationDirPath() + "/font/ice_pixel-7.ttf");
     qDebug() << QFontDatabase::addApplicationFont(QCoreApplication::applicationDirPath() + "/font/BACKTO1982.TTF");

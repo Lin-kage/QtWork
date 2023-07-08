@@ -42,7 +42,7 @@ protected:
 
     QTimer *_vanish = nullptr;
 
-    const QString _path;
+    QString _path;
 
 signals:
     void triggered(int);
@@ -115,14 +115,14 @@ public:
     {
         _vanish = new QTimer;
 
+        this->setScaledContents(true);
+
         connect(_vanish, &QTimer::timeout, [this]()->void {
             if (_vanish_movement < Vanish_Movements)
             {
                 this->setGeometry(_cur_x_center - _width * Vanish_Param[_vanish_movement] / 2, this->y(),
                     _width * Vanish_Param[_vanish_movement], this->height());
-                QPixmap img(_path);
-                img.scaled(this->size());
-                this->setPixmap(img);
+                //this->setPixmap(QPixmap(_path).scaled(this->size()));
                 _vanish_movement++;
             }
             else
@@ -193,16 +193,14 @@ public:
         int direction = -1, int hit_count = 0, int hit_count_bound = 2)
         : Block(parent, x_center, y_center, length, height, velocity, direction, hit_count, hit_count_bound, Block_Path[WHITESolidBlock1])
     {
-        this->setStyleSheet("background-color:rgb(255,255,255)");
-        this->setFrameStyle(QFrame::Box);
-        this->setText("solid\n2");
-        this->setAlignment(Qt::AlignCenter);
+
     }
 
     void hit() override
     {
         Block::hit();
-        this->setText("solid\n" + QString::number(_hit_count_bound - _hit_count));
+        if (_hit_count < _hit_count_bound)
+            this->setPixmap(QPixmap(_path = Block_Path[WHITESolidBlock1].chopped(4) + "_" + QString::number(_hit_count) + "hit.png"));
     }
 };
 
@@ -216,16 +214,14 @@ public:
         int direction = -1, int hit_count = 0, int hit_count_bound = 2)
         : Block(parent, x_center, y_center, length, height, velocity, direction, hit_count, hit_count_bound, Block_Path[WHITESolidBlock2])
     {
-        this->setStyleSheet("background-color:rgb(255,255,255)");
-        this->setFrameStyle(QFrame::Box);
-        this->setText("solid\n2");
-        this->setAlignment(Qt::AlignCenter);
+
     }
 
     void hit() override
     {
         Block::hit();
-        this->setText("solid\n" + QString::number(_hit_count_bound - _hit_count));
+        if (_hit_count < _hit_count_bound)
+            this->setPixmap(QPixmap(_path = Block_Path[WHITESolidBlock2].chopped(4) + "_" + QString::number(_hit_count) + "hit.png"));
     }
 };
 
@@ -239,10 +235,7 @@ public:
         int direction = -1, int hit_count = 0, int hit_count_bound = 1)
         : Block(parent, x_center, y_center, length, height, velocity, direction, hit_count, hit_count_bound, Block_Path[WHITEHealingBlock])
     {
-        this->setStyleSheet("background-color:rgb(255,255,255)");
-        this->setFrameStyle(QFrame::Box);
-        this->setText("heal");
-        this->setAlignment(Qt::AlignCenter);
+
     }
 };
 
@@ -256,10 +249,7 @@ public:
         int direction = -1, int hit_count = 0, int hit_count_bound = 1)
         : Block(parent, x_center, y_center, length, height, velocity, direction, hit_count, hit_count_bound, Block_Path[WHITEShieldBlock])
     {
-        this->setStyleSheet("background-color:rgb(255,255,255)");
-        this->setFrameStyle(QFrame::Box);
-        this->setText("shield");
-        this->setAlignment(Qt::AlignCenter);
+
     }
 };
 
@@ -275,10 +265,7 @@ public:
         int direction = -1, int hit_count = 0, int hit_count_bound = 1)
         : Block(parent, x_center, y_center, length, height, velocity, direction, hit_count, hit_count_bound, Block_Path[WHITELavaBlock])
     {
-        this->setStyleSheet("background-color:rgb(255,120,0)");
-        this->setFrameStyle(QFrame::Box);
-        this->setText("lava");
-        this->setAlignment(Qt::AlignCenter);
+
     }
 
     void move_on_bar() override{
@@ -350,10 +337,7 @@ public:
         double velocity = Block_Velocity[REDBombBlock], int direction = -1, int hit_count = 0, int hit_count_bound = 1)
         : Block(parent, x_center, y_center, length, height, velocity, direction, hit_count, hit_count_bound, Block_Path[REDBombBlock])
     {
-        this->setStyleSheet("background-color:rgb(255,0,0);boarder-color:rgb(255,0,0)");
-        this->setFrameStyle(QFrame::Box);
-        this->setText("bomb");
-        this->setAlignment(Qt::AlignCenter);
+
     }
 };
 
@@ -366,16 +350,14 @@ public:
         double velocity = Block_Velocity[REDSolidBlock1], int direction = -1, int hit_count = 0, int hit_count_bound = 2)
         : Block(parent, x_center, y_center, length, height, velocity, direction, hit_count, hit_count_bound, Block_Path[REDSolidBlock1])
     {
-        this->setStyleSheet("background-color:rgb(255,0,0);boarder-color:rgb(255,0,0)");
-        this->setFrameStyle(QFrame::Box);
-        this->setText("solid\n2");
-        this->setAlignment(Qt::AlignCenter);
+
     }
 
     void hit() override
     {
         Block::hit();
-        this->setText("solid\n" + QString::number(_hit_count_bound - _hit_count));
+        if (_hit_count < _hit_count_bound)
+            this->setPixmap(QPixmap(_path = Block_Path[REDSolidBlock1].chopped(4) + "_" + QString::number(_hit_count) + "hit.png"));
     }
 };
 
@@ -388,16 +370,14 @@ public:
         double velocity = Block_Velocity[REDSolidBlock2], int direction = -1, int hit_count = 0, int hit_count_bound = 2)
         : Block(parent, x_center, y_center, length, height, velocity, direction, hit_count, hit_count_bound, Block_Path[REDSolidBlock2])
     {
-        this->setStyleSheet("background-color:rgb(255,0,0);boarder-color:rgb(255,0,0)");
-        this->setFrameStyle(QFrame::Box);
-        this->setText("solid\n2");
-        this->setAlignment(Qt::AlignCenter);
+
     }
 
     void hit() override
     {
         Block::hit();
-        this->setText("solid\n" + QString::number(_hit_count_bound - _hit_count));
+        if (_hit_count < _hit_count_bound)
+            this->setPixmap(QPixmap(_path = Block_Path[REDSolidBlock2].chopped(4) + "_" + QString::number(_hit_count) + "hit.png"));
     }
 };
 
@@ -410,10 +390,7 @@ public:
         double velocity = Block_Velocity[REDCriticalBlock], int direction = -1, int hit_count = 0, int hit_count_bound = 1)
         : Block(parent, x_center, y_center, length, height, velocity, direction, hit_count, hit_count_bound, Block_Path[REDCriticalBlock])
     {
-        this->setStyleSheet("background-color:rgb(255,0,0);boarder-color:rgb(255,0,0)");
-        this->setFrameStyle(QFrame::Box);
-        this->setText("critic");
-        this->setAlignment(Qt::AlignCenter);
+
     }
 };
 
@@ -426,10 +403,7 @@ public:
         double velocity = Block_Velocity[REDSlimeBlock], int direction = -1, int hit_count = 0, int hit_count_bound = 1)
         : Block(parent, x_center, y_center, length, height, velocity, direction, hit_count, hit_count_bound, Block_Path[REDSlimeBlock])
     {
-        this->setStyleSheet("background-color:rgb(255,0,0);boarder-color:rgb(255,0,0)");
-        this->setFrameStyle(QFrame::Box);
-        this->setText("slime");
-        this->setAlignment(Qt::AlignCenter);
+
     }
 };
 
@@ -442,10 +416,7 @@ public:
         double velocity = Block_Velocity[REDGooBlock], int direction = -1, int hit_count = 0, int hit_count_bound = 1)
         : Block(parent, x_center, y_center, length, height, velocity, direction, hit_count, hit_count_bound, Block_Path[REDGooBlock])
     {
-        this->setStyleSheet("background-color:rgb(255,0,0);boarder-color:rgb(255,0,0)");
-        this->setFrameStyle(QFrame::Box);
-        this->setText("goo");
-        this->setAlignment(Qt::AlignCenter);
+
     }
 };
 
@@ -458,16 +429,14 @@ public:
         double velocity = Block_Velocity[REDShieldBlock], int direction = -1, int hit_count = 0, int hit_count_bound = 3)
         : Block(parent, x_center, y_center, length, height, velocity, direction, hit_count, hit_count_bound, Block_Path[REDShieldBlock])
     {
-        this->setStyleSheet("background-color:rgb(255,0,0);boarder-color:rgb(255,0,0)");
-        this->setFrameStyle(QFrame::Box);
-        this->setText("shield\n3");
-        this->setAlignment(Qt::AlignCenter);
+
     }
 
     void hit() override
     {
         Block::hit();
-        this->setText("shield\n" + QString::number(_hit_count_bound - _hit_count));
+        if (_hit_count < _hit_count_bound)
+            this->setPixmap(QPixmap(_path = Block_Path[REDShieldBlock].chopped(4) + "_" + QString::number(_hit_count) + "hit.png"));
     }
 };
 
@@ -480,15 +449,24 @@ public:
         double velocity = Block_Velocity[REDFireballBlock], int direction = -1, int hit_count = 0, int hit_count_bound = 1 << 30)
         : Block(parent, x_center, y_center, length, height, velocity, direction, hit_count, hit_count_bound, Block_Path[REDFireballBlock])
     {
-        this->setStyleSheet("background-color:rgb(255,0,0);boarder-color:rgb(255,0,0)");
-        this->setFrameStyle(QFrame::Box);
-        this->setText("fireball");
-        this->setAlignment(Qt::AlignCenter);
+        //this->setStyleSheet("background-color:rgb(255,0,0);boarder-color:rgb(255,0,0)");
+        //this->setFrameStyle(QFrame::Box);
+        //this->setText("fireball");
+        //this->setAlignment(Qt::AlignCenter);
     }
     bool access_right() override { return _cur_x_center > OperationBar_Right; }
     void hit() override {
         Block::hit();
         _direction *= -1;
+
+        if (_direction == -1)
+        {
+            this->setPixmap(QPixmap(Block_Path[REDFireballBlock]));
+        }
+        else
+        {
+            this->setPixmap(QPixmap::fromImage(QPixmap(Block_Path[REDFireballBlock]).toImage().mirrored(true, false)));
+        }
     }
 };
 
@@ -501,17 +479,16 @@ public:
         double velocity = Block_Velocity[REDIceballBlock], int direction = -1, int hit_count = 0, int hit_count_bound = 2)
         : Block(parent, x_center, y_center, length, height, velocity, direction, hit_count, hit_count_bound, Block_Path[REDIceballBlock])
     {
-        this->setStyleSheet("background-color:rgb(255,0,0);boarder-color:rgb(255,0,0)");
-        this->setFrameStyle(QFrame::Box);
-        this->setText("iceball\n2");
-        this->setAlignment(Qt::AlignCenter);
+        //this->setStyleSheet("background-color:rgb(255,0,0);boarder-color:rgb(255,0,0)");
+        //this->setFrameStyle(QFrame::Box);
+        //this->setText("iceball\n2");
+        //this->setAlignment(Qt::AlignCenter);
     }
 
     void hit() override
     {
         Block::hit();
         _max_velocity = 1.0;
-        this->setText("iceball\n" + QString::number(_hit_count_bound - _hit_count));
     }
 };
 
@@ -527,10 +504,10 @@ public:
         double velocity = Block_Velocity[REDArmorBlock], int direction = -1, int hit_count = 0, int hit_count_bound = 3)
         : Block(parent, x_center, y_center, length, height, velocity, direction, hit_count, hit_count_bound, Block_Path[REDArmorBlock])
     {
-        this->setStyleSheet("background-color:rgb(255,0,0);boarder-color:rgb(255,0,0)");
-        this->setFrameStyle(QFrame::Box);
-        this->setText("armor\n3");
-        this->setAlignment(Qt::AlignCenter);
+        //this->setStyleSheet("background-color:rgb(255,0,0);boarder-color:rgb(255,0,0)");
+        //this->setFrameStyle(QFrame::Box);
+        //this->setText("armor\n3");
+        //this->setAlignment(Qt::AlignCenter);
     }
 
     virtual void move_on_bar() override
@@ -547,7 +524,8 @@ public:
     void hit() override
     {
         Block::hit();
-        this->setText("armor\n" + QString::number(_hit_count_bound - _hit_count));
+        if (_hit_count < _hit_count_bound)
+            this->setPixmap(QPixmap(_path = Block_Path[REDArmorBlock].chopped(4) + "_" + QString::number(_hit_count) + "hit.png"));
     }
 };
 
@@ -563,10 +541,10 @@ public:
         double velocity = Block_Velocity[REDBowBlock], int direction = -1, int hit_count = 0, int hit_count_bound = 1)
         : Block(parent, x_center, y_center, length, height, velocity, direction, hit_count, hit_count_bound, Block_Path[REDBowBlock])
     {
-        this->setStyleSheet("background-color:rgb(255,0,0);boarder-color:rgb(255,0,0)");
-        this->setFrameStyle(QFrame::Box);
-        this->setText("bow");
-        this->setAlignment(Qt::AlignCenter);
+        //this->setStyleSheet("background-color:rgb(255,0,0);boarder-color:rgb(255,0,0)");
+        //this->setFrameStyle(QFrame::Box);
+        //this->setText("bow");
+        //this->setAlignment(Qt::AlignCenter);
     }
 
     virtual void move_on_bar() override
@@ -592,14 +570,14 @@ class RedArrowBlock : public Block
     friend class BlockLoader;
 public:
     RedArrowBlock(QWidget* parent, int x_center, int y_center,
-        int length = Block_Width[REDArmorBlock], int height = Block_Height[REDArmorBlock],
-        double velocity = Block_Velocity[REDArmorBlock], int direction = -1, int hit_count = 0, int hit_count_bound = 1)
-        : Block(parent, x_center, y_center, length, height, velocity, direction, hit_count, hit_count_bound, Block_Path[REDArmorBlock])
+        int length = Block_Width[REDArrowBlock], int height = Block_Height[REDArrowBlock],
+        double velocity = Block_Velocity[REDArrowBlock], int direction = -1, int hit_count = 0, int hit_count_bound = 1)
+        : Block(parent, x_center, y_center, length, height, velocity, direction, hit_count, hit_count_bound, Block_Path[REDArrowBlock])
     {
-        this->setStyleSheet("background-color:rgb(255,0,0);boarder-color:rgb(255,0,0)");
-        this->setFrameStyle(QFrame::Box);
-        this->setText("arrow");
-        this->setAlignment(Qt::AlignCenter);
+        //this->setStyleSheet("background-color:rgb(255,0,0);boarder-color:rgb(255,0,0)");
+        //this->setFrameStyle(QFrame::Box);
+        //this->setText("arrow");
+        //this->setAlignment(Qt::AlignCenter);
     }
 };
 
@@ -612,10 +590,10 @@ public:
         double velocity = Block_Velocity[REDSoulingBlock1], int direction = -1, int hit_count = 0, int hit_count_bound = 1)
         : Block(parent, x_center, y_center, length, height, velocity, direction, hit_count, hit_count_bound, Block_Path[REDSoulingBlock1])
     {
-        this->setStyleSheet("background-color:rgb(255,0,0);boarder-color:rgb(255,0,0)");
-        this->setFrameStyle(QFrame::Box);
-        this->setText("soul");
-        this->setAlignment(Qt::AlignCenter);
+        //this->setStyleSheet("background-color:rgb(255,0,0);boarder-color:rgb(255,0,0)");
+        //this->setFrameStyle(QFrame::Box);
+        //this->setText("soul");
+        //this->setAlignment(Qt::AlignCenter);
     }
 };
 
@@ -628,10 +606,10 @@ public:
         double velocity = Block_Velocity[REDSoulingBlock2], int direction = -1, int hit_count = 0, int hit_count_bound = 1)
         : Block(parent, x_center, y_center, length, height, velocity, direction, hit_count, hit_count_bound, Block_Path[REDSoulingBlock2])
     {
-        this->setStyleSheet("background-color:rgb(255,0,0);boarder-color:rgb(255,0,0)");
-        this->setFrameStyle(QFrame::Box);
-        this->setText("soul");
-        this->setAlignment(Qt::AlignCenter);
+        //this->setStyleSheet("background-color:rgb(255,0,0);boarder-color:rgb(255,0,0)");
+        //this->setFrameStyle(QFrame::Box);
+        //this->setText("soul");
+        //this->setAlignment(Qt::AlignCenter);
     }
 };
 
@@ -644,10 +622,10 @@ public:
         double velocity = Block_Velocity[REDBoneBlock], int direction = -1, int hit_count = 0, int hit_count_bound = 1)
         : Block(parent, x_center, y_center, length, height, velocity, direction, hit_count, hit_count_bound, Block_Path[REDBoneBlock])
     {
-        this->setStyleSheet("background-color:rgb(255,0,0);boarder-color:rgb(255,0,0)");
-        this->setFrameStyle(QFrame::Box);
-        this->setText("bone");
-        this->setAlignment(Qt::AlignCenter);
+        //this->setStyleSheet("background-color:rgb(255,0,0);boarder-color:rgb(255,0,0)");
+        //this->setFrameStyle(QFrame::Box);
+        //this->setText("bone");
+        //this->setAlignment(Qt::AlignCenter);
     }
 };
 
@@ -664,10 +642,10 @@ public:
         : Block(parent, x_center, y_center, length, height, velocity, direction, hit_count, hit_count_bound, Block_Path[REDDustBlock])
     {
         _forward_able = 0;
-        this->setStyleSheet("background-color:rgb(255,0,0);boarder-color:rgb(255,0,0)");
-        this->setFrameStyle(QFrame::Box);
-        this->setText("dust");
-        this->setAlignment(Qt::AlignCenter);
+        //this->setStyleSheet("background-color:rgb(255,0,0);boarder-color:rgb(255,0,0)");
+        //this->setFrameStyle(QFrame::Box);
+        //this->setText("dust");
+        //this->setAlignment(Qt::AlignCenter);
     }
 
     void move_on_bar() override
@@ -690,10 +668,10 @@ public:
         double velocity = Block_Velocity[REDDeadBlock], int direction = -1, int hit_count = 0, int hit_count_bound = 1 << 30)
         : Block(parent, x_center, y_center, length, height, velocity, direction, hit_count, hit_count_bound, Block_Path[REDDeadBlock])
     {
-        this->setStyleSheet("background-color:rgb(255,0,0);boarder-color:rgb(255,0,0)");
-        this->setFrameStyle(QFrame::Box);
-        this->setText("dead");
-        this->setAlignment(Qt::AlignCenter);
+        //this->setStyleSheet("background-color:rgb(255,0,0);boarder-color:rgb(255,0,0)");
+        //this->setFrameStyle(QFrame::Box);
+        //this->setText("dead");
+        //this->setAlignment(Qt::AlignCenter);
     }
 };
 
@@ -706,10 +684,10 @@ public:
         double velocity = Block_Velocity[WHITESwordBlock], int direction = -1, int hit_count = 0, int hit_count_bound = 1 << 30)
         : Block(parent, x_center, y_center, length, height, velocity, direction, hit_count, hit_count_bound, Block_Path[WHITESwordBlock])
     {
-        this->setStyleSheet("background-color:rgb(255,255,255)");
-        this->setFrameStyle(QFrame::Box);
-        this->setText("sword");
-        this->setAlignment(Qt::AlignCenter);
+        //this->setStyleSheet("background-color:rgb(255,255,255)");
+        //this->setFrameStyle(QFrame::Box);
+        //this->setText("sword");
+        //this->setAlignment(Qt::AlignCenter);
     }
 };
 

@@ -33,6 +33,26 @@ protected:
 
 public:
 
+    void in_stage(int stage)
+    {
+        if (stage == 1)
+        {
+            _attack_info->setStyleSheet("color:rgb(0,0,0)");
+        }
+        else if (stage == 2)
+        {
+            _attack_info->setStyleSheet("color:rgb(220,220,220)");
+        }
+        else if (stage == 3)
+        {
+            _attack_info->setStyleSheet("color:rgb(0,0,0)");
+        }
+        else if (stage == 4)
+        {
+            _attack_info->setStyleSheet("color:rgb(0,0,0)");
+        }
+    }
+
     void set_jumpnumber(bool b) { _jumpnumber_on = b; }
 
     bool arrive()
@@ -47,7 +67,6 @@ public:
 
     void rotate_image()
     {
-        return;
         QImage temp = _image->toImage();
         temp = temp.mirrored(true, false);
 
@@ -83,8 +102,8 @@ public:
     void upgrade(double p)
     {
         _health = _max_health = _max_health * p;
-        _attack_low = _attack_low * p;
-        _attack_high = _attack_high * p;
+        _attack_low = _attack_low * p / 1.6;
+        _attack_high = _attack_high * p / 1.6;
     }
 
     bool alive() const { return _health > 0; }
@@ -169,9 +188,9 @@ public:
            int cold_time = EnemyColdTime[LEPRECHAUN][0], int cold_time_bias = EnemyColdTime[LEPRECHAUN][1], double block_frecuancy = 1.0)
         : Enemy(parent, max_health, min_attack, max_attack, cold_time, cold_time_bias, EnemyBlocks[LEPRECHAUN], block_frecuancy, ImgAddress[LEPRECHAUN])
     {
-        this->setText("Leprechuan");
-        this->setAlignment(Qt::AlignCenter);
-        this->setFrameStyle(QFrame::Box);
+        //this->setText("Leprechuan");
+        //this->setAlignment(Qt::AlignCenter);
+        //this->setFrameStyle(QFrame::Box);
     }
 };
 
@@ -197,9 +216,9 @@ public:
              int cold_time = EnemyColdTime[GOBLIN][0], int cold_time_bias = EnemyColdTime[GOBLIN][1], double block_frecuancy = 1.0)
         : Enemy(parent, max_health, min_attack, max_attack, cold_time, cold_time_bias, EnemyBlocks[GOBLIN], block_frecuancy, ImgAddress[GOBLIN])
     {
-        this->setText("Goblin");
-        this->setAlignment(Qt::AlignCenter);
-        this->setFrameStyle(QFrame::Box);
+        //this->setText("Goblin");
+        //this->setAlignment(Qt::AlignCenter);
+        //this->setFrameStyle(QFrame::Box);
     }
 };
 
@@ -258,9 +277,9 @@ public:
             int cold_time = EnemyColdTime[GOLEM][0], int cold_time_bias = EnemyColdTime[GOLEM][1], double block_frecuancy = 1.0)
         : Enemy(parent, max_health, min_attack, max_attack, cold_time, cold_time_bias, EnemyBlocks[GOLEM], block_frecuancy, ImgAddress[GOLEM])
     {
-        this->setText("Golem");
-        this->setAlignment(Qt::AlignCenter);
-        this->setFrameStyle(QFrame::Box);
+        //this->setText("Golem");
+        //this->setAlignment(Qt::AlignCenter);
+        //this->setFrameStyle(QFrame::Box);
     }
 };
 
@@ -326,9 +345,9 @@ public:
         int cold_time = EnemyColdTime[GUARD][0], int cold_time_bias = EnemyColdTime[GUARD][1], double block_frecuancy = 1.0)
         : Enemy(parent, max_health, min_attack, max_attack, cold_time, cold_time_bias, EnemyBlocks[GUARD], block_frecuancy, ImgAddress[GUARD])
     {
-        this->setText("Guard");
-        this->setAlignment(Qt::AlignCenter);
-        this->setFrameStyle(QFrame::Box);
+        //this->setText("Guard");
+        //this->setAlignment(Qt::AlignCenter);
+        //this->setFrameStyle(QFrame::Box);
     }
 };
 
@@ -340,9 +359,9 @@ public:
         int cold_time = EnemyColdTime[ARCHER][0], int cold_time_bias = EnemyColdTime[ARCHER][1], double block_frecuancy = 1.0)
         : Enemy(parent, max_health, min_attack, max_attack, cold_time, cold_time_bias, EnemyBlocks[ARCHER], block_frecuancy, ImgAddress[ARCHER])
     {
-        this->setText("Archer");
-        this->setAlignment(Qt::AlignCenter);
-        this->setFrameStyle(QFrame::Box);
+        //this->setText("Archer");
+        //this->setAlignment(Qt::AlignCenter);
+        //this->setFrameStyle(QFrame::Box);
     }
 };
 
@@ -387,9 +406,9 @@ public:
         int cold_time = EnemyColdTime[DARKKING][0], int cold_time_bias = EnemyColdTime[DARKKING][1], double block_frecuancy = 1.0)
         : Enemy(parent, max_health, min_attack, max_attack, cold_time, cold_time_bias, EnemyBlocks[DARKKING], block_frecuancy, ImgAddress[DARKKING])
     {
-        this->setText("Darkking");
-        this->setAlignment(Qt::AlignCenter);
-        this->setFrameStyle(QFrame::Box);
+        //this->setText("Darkking");
+        //this->setAlignment(Qt::AlignCenter);
+        //this->setFrameStyle(QFrame::Box);
     }
 };
 
@@ -401,9 +420,9 @@ public:
         int cold_time = EnemyColdTime[MELIN][0], int cold_time_bias = EnemyColdTime[MELIN][1], double block_frecuancy = 1.0)
         : Enemy(parent, max_health, min_attack, max_attack, cold_time, cold_time_bias, EnemyBlocks[MELIN], block_frecuancy, ImgAddress[MELIN])
     {
-        this->setText("Melin");
-        this->setAlignment(Qt::AlignCenter);
-        this->setFrameStyle(QFrame::Box);
+        //this->setText("Melin");
+        //this->setAlignment(Qt::AlignCenter);
+        //this->setFrameStyle(QFrame::Box);
     }
 
     void magical_hurt(int damage)
@@ -439,9 +458,9 @@ public:
         int cold_time = EnemyColdTime[DEMON][0], int cold_time_bias = EnemyColdTime[DEMON][1], double block_frecuancy = 1.0)
         : Enemy(parent, max_health, min_attack, max_attack, cold_time, cold_time_bias, EnemyBlocks[DEMON], block_frecuancy, ImgAddress[DEMON])
     {
-        this->setText("Demon");
-        this->setAlignment(Qt::AlignCenter);
-        this->setFrameStyle(QFrame::Box);
+        //this->setText("Demon");
+        //this->setAlignment(Qt::AlignCenter);
+        //this->setFrameStyle(QFrame::Box);
     }
 };
 
@@ -474,9 +493,9 @@ public:
         int cold_time = EnemyColdTime[SUCCUBUS][0], int cold_time_bias = EnemyColdTime[SUCCUBUS][1], double block_frecuancy = 1.0)
         : Enemy(parent, max_health, min_attack, max_attack, cold_time, cold_time_bias, EnemyBlocks[SUCCUBUS], block_frecuancy, ImgAddress[SUCCUBUS])
     {
-        this->setText("Succubus");
-        this->setAlignment(Qt::AlignCenter);
-        this->setFrameStyle(QFrame::Box);
+        //this->setText("Succubus");
+        //this->setAlignment(Qt::AlignCenter);
+        //this->setFrameStyle(QFrame::Box);
     }
 
     void physical_hurt(int damage)
@@ -508,9 +527,9 @@ public:
         int cold_time = EnemyColdTime[THECREATOR][0], int cold_time_bias = EnemyColdTime[THECREATOR][1], double block_frecuancy = 1.0)
         : Enemy(parent, max_health, min_attack, max_attack, cold_time, cold_time_bias, EnemyBlocks[THECREATOR], block_frecuancy, ImgAddress[THECREATOR])
     {
-        this->setText("The Creator");
-        this->setAlignment(Qt::AlignCenter);
-        this->setFrameStyle(QFrame::Box);
+        //this->setText("The Creator");
+        //this->setAlignment(Qt::AlignCenter);
+        //this->setFrameStyle(QFrame::Box);
     }
 };
 

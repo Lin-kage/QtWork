@@ -59,7 +59,6 @@ Enemy::Enemy(QWidget *parent, int max_health, int min_attack, int max_attack,
     _attack_info = new QLabel(_parent);
     _attack_info->setGeometry(Right_Attack_Info_X_Center - Right_Attack_Info_Width / 2, Right_Attack_Info_Y_Center - Right_Attack_Info_Height / 2,
                               Right_Attack_Info_Width, Right_Attack_Info_Height);
-    _attack_info->setFrameStyle(QFrame::Box);
     _attack_info->setFont(QFont(QFontDatabase::applicationFontFamilies(1).at(0), 30));
     _attack_info->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
     _attack_info->setText(QString::number(_attack_low) + " - " + QString::number(_attack_high));

@@ -267,7 +267,7 @@ void BlockLoader::generate_block(Block* upper)
     }
 }
 
-void BlockLoader::generate_block_forced(int x_center, int code, Block* upper)
+void BlockLoader::generate_block_forced(int x_center, int code, Block* upper, double velocity)
 {
     Block* block = nullptr;
     switch (code) {
@@ -535,7 +535,8 @@ void BlockLoader::retreat_blocks(double retreat_velocity)
     {
         if ((*i)->is_deleteable())
             continue;
-        (*i)->set_velocity(-retreat_velocity);
+        if ((*i)->_direction < 0)
+            (*i)->set_velocity(-retreat_velocity);
     }
 }
 

@@ -41,6 +41,8 @@ private:
 
     bool _shield_on = 0;
 
+    QLabel* _shield = nullptr;
+
 public:
     Hero(QWidget *parent, int max_health = 100, int min_attack = 10, int max_attack = 15, int magic_attack = 12);
 
@@ -64,6 +66,8 @@ public:
             _hit_count_icon->deleteLater();
         if (_hit_count_info)
             _hit_count_info->deleteLater();
+        if (_shield)
+            _shield->deleteLater();
 
         qDebug() << "hero deleted\n";
     }
@@ -106,6 +110,7 @@ public:
     int min_attack() const { return _attack_low; }
     int max_attack() const { return _attack_high; }
     int magic_attack() const { return _magic_attack; }
+    bool shield_on() const { return _shield_on; }
 
     void set_health(int health) {
         _health = health;
@@ -147,6 +152,26 @@ public:
         double per = 1.0 * _health / _max_health;
         _max_health = _max_health + p * _max_health;
         _health = _max_health * per;
+    }
+
+    void in_stage(int stage)
+    {
+        if (stage == 1)
+        {
+            _attack_info->setStyleSheet("color:rgb(0,0,0)");
+        }
+        else if (stage == 2)
+        {
+            _attack_info->setStyleSheet("color:rgb(220,220,220)");
+        }
+        else if (stage == 3)
+        {
+            _attack_info->setStyleSheet("color:rgb(0,0,0)");
+        }
+        else if (stage == 4)
+        {
+            _attack_info->setStyleSheet("color:rgb(0,0,0)");
+        }
     }
 
     void hit_count()

@@ -37,18 +37,18 @@ const int
     OperationBar_Y_Center_Three[3] = {400, 450, 500},
 
     MovingSign_Width = 27,
-    MovingSign_Height = 124,
+    MovingSign_Height = 116,
 
     OperationBar_Left = OperationBar_X_Center - OperationBar_Width / 2 + MovingSign_Width / 2,
     OperationBar_Right = OperationBar_X_Center + OperationBar_Width / 2 - MovingSign_Width / 2,
 
     OperationBar_Frame_Width = 826,
-    OperationBar_Frame_Height = 198,
+    OperationBar_Frame_Height = 188,
     OperationBar_Frame_X_Center = Main_Window_X_Center,
     OperationBar_Frame_Y_Center = 450,
 
     OperationBar_Board_Width = 770,
-    OperationBar_Board_Height = 148,
+    OperationBar_Board_Height = 128,
     OperationBar_Board_X_Center = Main_Window_X_Center,
     OperationBar_Board_Y_Center = 450,
 
@@ -114,17 +114,17 @@ const int
 
     Upgrade_Menu_X_Center = Main_Window_X_Center,
     Upgrade_Menu_Y_Center = Main_Window_Y_Center,
-    Upgrade_Menu_Width = 600,
-    Upgrade_Menu_Height = 400,
+    Upgrade_Menu_Width = 1000,
+    Upgrade_Menu_Height = 600,
 
     Upgrade_Button_Interval = 25,
 
-    Upgrade_Button_Width = 450,
-    Upgrade_Button_Height = 100,
-    Upgrade_Button_X[3] {Upgrade_Menu_X_Center - Upgrade_Button_Width / 2, Upgrade_Menu_X_Center - Upgrade_Button_Width / 2, Upgrade_Menu_X_Center - Upgrade_Button_Width / 2},
-    Upgrade_Button_Y[3] {Upgrade_Menu_Y_Center - Upgrade_Menu_Height / 2 + Upgrade_Button_Interval,
-                                Upgrade_Menu_Y_Center - Upgrade_Menu_Height / 2 + 2 * Upgrade_Button_Interval + Upgrade_Button_Height,
-                                Upgrade_Menu_Y_Center - Upgrade_Menu_Height / 2 + 3 * Upgrade_Button_Interval + 2 * Upgrade_Button_Height},
+    Upgrade_Button_Width = 475,
+    Upgrade_Button_Height = 77,
+    Upgrade_Button_X[3] {Upgrade_Menu_X_Center - Upgrade_Button_Width / 2 + 31, Upgrade_Menu_X_Center - Upgrade_Button_Width / 2 + 31, Upgrade_Menu_X_Center - Upgrade_Button_Width / 2 + 31},
+    Upgrade_Button_Y[3] {Upgrade_Menu_Y_Center - Upgrade_Menu_Height / 2 + Upgrade_Button_Interval + 174,
+                                Upgrade_Menu_Y_Center - Upgrade_Menu_Height / 2 + 2 * Upgrade_Button_Interval + Upgrade_Button_Height + 174,
+                                Upgrade_Menu_Y_Center - Upgrade_Menu_Height / 2 + 3 * Upgrade_Button_Interval + 2 * Upgrade_Button_Height + 174},
 
     Stage_Sign_X_Center = Main_Window_X_Center,
     Stage_Sign_Y_Center = 100,
@@ -152,32 +152,32 @@ const int
     Option_Menu_Height = 400,
 
     Optino_Bgm_Label_X_Center = 300,
-    Option_Bgm_Label_Y_Center = 200,
+    Option_Bgm_Label_Y_Center = 240,
     Option_Bgm_Label_Width = 100,
     Option_Bgm_Label_Height = 40,
 
     Option_Bgm_Slider_X_Center = 680,
-    Option_Bgm_Slider_Y_Center = 200,
+    Option_Bgm_Slider_Y_Center = 240,
     Option_Bgm_Slider_Width = 400,
     Option_Bgm_Slider_Height = 40,
 
     Option_Sound_Label_X_Center = 285,
-    Option_Sound_Label_Y_Center = 280,
+    Option_Sound_Label_Y_Center = 320,
     Option_Sound_Label_Width = 100,
     Option_Sound_Label_Height = 40,
 
     Option_Sound_Slider_X_Center = 680,
-    Option_Sound_Slider_Y_Center = 280,
+    Option_Sound_Slider_Y_Center = 320,
     Option_Sound_Slider_Width = 400,
     Option_Sound_Slider_Height = 40,
 
     Option_Jumpnumber_Label_X_Center = 400,
-    Option_Jumpnumber_Label_Y_Center = 360,
+    Option_Jumpnumber_Label_Y_Center = 380,
     Option_Jumpnumber_Label_Width = 200,
     Option_Jumpnumber_Label_Height = 40,
 
     Option_Jumpnumber_Button_X_Center = 550,
-    Option_Jumpnumber_Button_Y_Center = 360,
+    Option_Jumpnumber_Button_Y_Center = 380,
     Option_Jumpnumber_Button_Width = 60,
     Option_Jumpnumber_Button_Height = 40,
 

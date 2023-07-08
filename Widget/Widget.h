@@ -49,31 +49,49 @@ public:
 
     void show_save()
     {
-        QLabel *save_info = new QLabel(this);
-        QPushButton *close_button = new QPushButton(this);
-        QPushButton *commit_button = new QPushButton(this);
+        QLabel* save_background = new QLabel(this);
+        QLabel *save_info = new QLabel(save_background);
+        HoverButton *close_button = new HoverButton(this);
+        HoverButton*commit_button = new HoverButton(this);
 
+        save_background->setGeometry(0, 0, Main_Window_Width, Main_Window_Height);
+        save_background->setPixmap(QPixmap("picture/icon/option.png"));
+        save_background->setVisible(true);
         save_info->setGeometry(Load_Label_X_Center - Load_Label_Width / 2, Load_Label_Y_Center - Load_Label_Height / 2,
             Load_Label_Width, Load_Label_Height);
-        save_info->setStyleSheet("background-color:rgb(255,255,255)");
+        save_info->setAttribute(Qt::WA_TranslucentBackground);
         save_info->setAlignment(Qt::AlignCenter);
         save_info->setFont(QFont(QFontDatabase::applicationFontFamilies(0).at(0), 24));
         save_info->setText("Stage: " + QString::number(_game_setting._stage_big) + " - " + QString::number(_game_setting._stage_small) + "\n" +
             "Health: " + QString::number(_game_setting._health) + " / " + QString::number(_game_setting._max_health) + "\n" +
-            "Attack: " + QString::number(_game_setting._min_attack) + " - " + QString::number(_game_setting._max_attack) + "\n\n"
+            "Attack: " + QString::number(_game_setting._min_attack) + " - " + QString::number(_game_setting._max_attack) + "\n" + 
+            "Magic Attack:" + QString::number(_game_setting._magic_attack) + "\n\n" +
             "Are you sure to load?");
         save_info->setVisible(true);
         
         close_button->setGeometry(Load_Close_Button_X_Center - Load_Close_Button_Width / 2, Load_Close_Button_Y_Center - Load_Close_Button_Height / 2,
             Load_Close_Button_Width, Load_Close_Button_Height);
-        close_button->setFont(QFont(QFontDatabase::applicationFontFamilies(3).at(0), 24));
-        close_button->setText("X");
+        close_button->setIconSize(close_button->size());
+        close_button->setIcon(QPixmap("picture/icon/blank_frame.png").scaled(close_button->size()));
         close_button->setVisible(true);
+
+        QLabel* label = new QLabel(close_button);
+        label->setGeometry(0, 0, close_button->width(), close_button->height());
+        label->setFont(QFont(QFontDatabase::applicationFontFamilies(3).at(0), 24));
+        label->setText("X");
+        label->setAlignment(Qt::AlignCenter);
+        label->setVisible(true);
         connect(close_button, &QPushButton::clicked, [=]()->void {
             _music_player._choose_sound->play();
-            save_info->deleteLater();
+            save_background->deleteLater();
             close_button->deleteLater();
             commit_button->deleteLater();
+            });
+        connect(close_button, &HoverButton::enter, [=]()->void {
+            close_button->setIcon(QPixmap("picture/icon/blank_frame_hover.png").scaled(close_button->size()));
+            });
+        connect(close_button, &HoverButton::leave, [=]()->void {
+            close_button->setIcon(QPixmap("picture/icon/blank_frame.png").scaled(close_button->size()));
             });
 
         if (_game_setting._save_exist == 0)
@@ -81,18 +99,31 @@ public:
             save_info->setText("No save!");
             return;
         }
-
         commit_button->setGeometry(Load_Commit_Button_X_Center - Load_Commit_Button_Width / 2, Load_Commit_Button_Y_Center - Load_Commit_Button_Height / 2,
             Load_Commit_Button_Width, Load_Commit_Button_Height);
-        commit_button->setFont(QFont(QFontDatabase::applicationFontFamilies(0).at(0), 24));
-        commit_button->setText("OK");
+        commit_button->setIconSize(commit_button->size());
+        commit_button->setIcon(QPixmap("picture/icon/blank_frame.png").scaled(commit_button->size()));
         commit_button->setVisible(true);
+
+        label = new QLabel(commit_button);
+        label->setGeometry(0, 0, commit_button->width(), commit_button->height());
+        label->setFont(QFont(QFontDatabase::applicationFontFamilies(0).at(0), 24));
+        label->setText("OK");
+        label->setAlignment(Qt::AlignCenter);
+        label->setVisible(true);
+
+        connect(commit_button, &HoverButton::enter, [=]()->void {
+            commit_button->setIcon(QPixmap("picture/icon/blank_frame_hover.png").scaled(commit_button->size()));
+            });
+        connect(commit_button, &HoverButton::leave, [=]()->void {
+            commit_button->setIcon(QPixmap("picture/icon/blank_frame.png").scaled(commit_button->size()));
+            });
         connect(commit_button, &QPushButton::clicked, [=]()->void {
             _music_player._choose_sound->play();
             close_main_menu();
             _game_loader.preload(_game_setting);
 
-            save_info->deleteLater();
+            save_background->deleteLater();
             commit_button->deleteLater();
             close_button->deleteLater();
 
@@ -400,6 +431,8 @@ private:
 
         int _min_attack, _max_attack, _magic_attack;
 
+        int _shield_on;
+
         // 首次启动参数
 
         // 最高分参数
@@ -427,6 +460,7 @@ private:
             _max_attack = setting->value("max_attack", 0).toInt();
             _hit_count = setting->value("hit_count", 0).toInt();
             _magic_attack = setting->value("magic_attack", 0).toInt();
+            _shield_on = setting->value("shield_on", 0).toInt();
 
             setting->endGroup();
 
@@ -444,6 +478,7 @@ private:
             _max_attack = _parent->_game_loader._hero->max_attack();
             _hit_count = _parent->_game_loader._hero->get_hit_count();
             _magic_attack = _parent->_game_loader._hero->magic_attack();
+            _shield_on = _parent->_game_loader._hero->shield_on();
         }
 
         ~GameSetting()
@@ -469,6 +504,7 @@ private:
             setting->setValue("max_attack", _max_attack);
             setting->setValue("hit_count", _hit_count);
             setting->setValue("magic_attack", _magic_attack);
+            setting->setValue("shield_on", _shield_on);
 
             setting->endGroup();
 
@@ -498,7 +534,8 @@ private:
             setting->setValue("max_health", _max_health);
             setting->setValue("min_attack", _min_attack);
             setting->setValue("max_attack", _max_attack);
-            setting->setValue("hit_count", _hit_count);
+            setting->setValue("magic_attack", _magic_attack);
+            setting->setValue("shield_on", _shield_on);
 
             setting->endGroup();
 
@@ -608,20 +645,18 @@ private:
 
         QLabel *_bgm_label, *_sound_label;
         QSlider *_bgm_slider, *_sound_slider;
-        QLabel *_jumpnum_label;
-        QPushButton *_jumpnumber_button;
-        QPushButton* _close_button;
-        QPushButton* _main_menu_button;
-        QPushButton* _just_close_button;
+        QLabel *_jumpnum_label, *_jumpnumber_button_label, *_label;
+        HoverButton *_jumpnumber_button;
+        HoverButton* _close_button;
+        HoverButton* _main_menu_button;
+        HoverButton* _just_close_button;
     public:
         Optionmenu(Widget* parent, int last_condition)
             : QLabel(parent), _parent(parent), _last_condition(last_condition)
         {
-            this->setGeometry(Option_Menu_X_Center - Option_Menu_Width / 2, Option_Menu_Y_Center - Option_Menu_Height / 2,
-                Option_Menu_Width, Option_Menu_Height);
+            this->setGeometry(0, 0, 1000, 600);
             this->setVisible(true);
-            this->setFrameStyle(QFrame::Box);
-            this->setStyleSheet("background-color:rgb(255,255,255)");
+            this->setPixmap(QPixmap("picture/icon/option.png"));
 
             _bgm_label = new QLabel(_parent);
             _bgm_label->setGeometry(Optino_Bgm_Label_X_Center - Option_Bgm_Label_Width / 2, Option_Bgm_Label_Y_Center - Option_Bgm_Label_Height / 2,
@@ -668,27 +703,34 @@ private:
             _jumpnum_label->setAlignment(Qt::AlignCenter);
             _jumpnum_label->setAttribute(Qt::WA_TranslucentBackground);
 
-            _jumpnumber_button = new QPushButton(_parent);
+            _jumpnumber_button = new HoverButton(_parent);
             _jumpnumber_button->setGeometry(Option_Jumpnumber_Button_X_Center - Option_Jumpnumber_Button_Width / 2, Option_Jumpnumber_Button_Y_Center - Option_Jumpnumber_Button_Height / 2,
                 Option_Jumpnumber_Button_Width, Option_Jumpnumber_Button_Height);
-            _jumpnumber_button->setFont(QFont(QFontDatabase::applicationFontFamilies(1).at(0), 26));
+            _jumpnumber_button->setIconSize(_jumpnumber_button->size());
+            _jumpnumber_button->setIcon(QPixmap("picture/icon/blank_frame.png").scaled(_jumpnumber_button->size()));
+            _jumpnumber_button->setVisible(true);
+            _jumpnumber_button_label = new QLabel(_jumpnumber_button);
+            _jumpnumber_button_label->setGeometry(0, 0, _jumpnumber_button->width(), _jumpnumber_button->height());
+            _jumpnumber_button_label->setAttribute(Qt::WA_TranslucentBackground);
+            _jumpnumber_button_label->setFont(QFont(QFontDatabase::applicationFontFamilies(0).at(0), 20));
+            _jumpnumber_button_label->setAlignment(Qt::AlignCenter);
 
             if (_parent->_game_setting.jumpnumber_on())
             {
-                _jumpnumber_button->setText("ON");
+                _jumpnumber_button_label->setText("ON");
             }
             else
             {
-                _jumpnumber_button->setText("OFF");
+                _jumpnumber_button_label->setText("OFF");
             }
-            _jumpnumber_button->setVisible(true);
+            _jumpnumber_button_label->setVisible(true);
 
             connect(_jumpnumber_button, &QPushButton::clicked, [this]()->void {
                 _parent->_game_setting.change_jumpnumber();
                 if (_parent->_game_setting.jumpnumber_on())
-                    _jumpnumber_button->setText("ON");
+                    _jumpnumber_button_label->setText("ON");
                 else 
-                    _jumpnumber_button->setText("OFF");
+                    _jumpnumber_button_label->setText("OFF");
 
                 if (this->_parent->_game_condition == GamePause)
                 {
@@ -699,12 +741,28 @@ private:
                 this->_parent->_music_player._choose_sound->play();
             });
 
-            _close_button = new QPushButton(_parent);
+            connect(_jumpnumber_button, &HoverButton::enter, [=]()->void {
+                _jumpnumber_button->setIcon(QPixmap("picture/icon/blank_frame_hover.png").scaled(_jumpnumber_button->size()));
+                });
+            connect(_jumpnumber_button, &HoverButton::leave, [=]()->void {
+                _jumpnumber_button->setIcon(QPixmap("picture/icon/blank_frame.png").scaled(_jumpnumber_button->size()));
+                });
+
+            _close_button = new HoverButton(_parent);
             _close_button->setGeometry(Option_Close_Button_X_Center - Option_Close_Button_Width / 2, Option_Close_Button_Y_Center - Option_Close_Button_Height / 2,
-                Option_Close_Button_Width, Option_Close_Button_Height);
-            _close_button->setFont(QFont(QFontDatabase::applicationFontFamilies(3).at(0), 40));
-            _close_button->setText("X");
+                Option_Close_Button_Width, Option_Close_Button_Height); _jumpnumber_button->setIcon(QPixmap("picture/icon/blank_frame.png").scaled(_jumpnumber_button->size()));
             _close_button->setVisible(true);
+            _close_button->setIconSize(_close_button->size());
+            _close_button->setIcon(QPixmap("picture/icon/blank_frame.png").scaled(_close_button->size()));
+            
+            _label = new QLabel(_close_button);
+            _label->setGeometry(0, 0, _close_button->width(), _close_button->height());
+            _label->setAttribute(Qt::WA_TranslucentBackground);
+            _label->setFont(QFont(QFontDatabase::applicationFontFamilies(3).at(0), 40));
+            _label->setAlignment(Qt::AlignCenter);
+            _label->setText("X");
+            _label->setVisible(true);
+
             connect(_close_button, &QPushButton::clicked, [this]()->void {
                 _parent->set_condition(_last_condition);
 
@@ -717,12 +775,31 @@ private:
                 _parent->set_option_menu(nullptr);
                 this->deleteLater();
                 });
+            connect(_close_button, &HoverButton::enter, [=]()->void {
+                _close_button->setIcon(QPixmap("picture/icon/blank_frame_hover.png").scaled(_close_button->size()));
+                });
+            connect(_close_button, &HoverButton::leave, [=]()->void {
+                _close_button->setIcon(QPixmap("picture/icon/blank_frame.png").scaled(_close_button->size()));
+                });
 
-            _main_menu_button = new QPushButton(_parent);
+            _main_menu_button = new HoverButton(_parent);
             _main_menu_button->setGeometry(Option_Menu_X_Center - 100 - 80, Option_Menu_Y_Center + Option_Menu_Height / 2 - 30,
                 160, 50);
-            _main_menu_button->setFont(QFont(QFontDatabase::applicationFontFamilies(0).at(0), 16));
-            _main_menu_button->setText("Main Menu");
+            _main_menu_button->setIconSize(_main_menu_button->size());
+            _main_menu_button->setIcon(QPixmap("picture/icon/blank_frame.png").scaled(_main_menu_button->size()));
+
+            _label = new QLabel(_main_menu_button);
+            _label->setGeometry(0, 0, _main_menu_button->width(), _main_menu_button->height());
+            _label->setAttribute(Qt::WA_TranslucentBackground);
+            _label->setFont(QFont(QFontDatabase::applicationFontFamilies(0).at(0), 16));
+            _label->setAlignment(Qt::AlignCenter);
+            _label->setText("Main Menu");
+            if (_parent->game_condition() == GamePause)
+            {
+                _main_menu_button->setVisible(true);
+                _label->setVisible(true);
+            }
+
             connect(_main_menu_button, &QPushButton::clicked, [this]()->void {
 
                 _parent->_game_loader.game_quit();
@@ -734,21 +811,41 @@ private:
                 this->deleteLater();
                 _parent->set_option_menu(nullptr);
                 });
+            connect(_main_menu_button, &HoverButton::enter, [=]()->void {
+                _main_menu_button->setIcon(QPixmap("picture/icon/blank_frame_hover.png").scaled(_main_menu_button->size()));
+                });
+            connect(_main_menu_button, &HoverButton::leave, [=]()->void {
+                _main_menu_button->setIcon(QPixmap("picture/icon/blank_frame.png").scaled(_main_menu_button->size()));
+                });
 
-            _just_close_button = new QPushButton(_parent);
+            _just_close_button = new HoverButton(_parent);
             _just_close_button->setGeometry(Option_Menu_X_Center + 100 - 80, Option_Menu_Y_Center + Option_Menu_Height / 2 - 30,
                 160, 50);
-            _just_close_button->setFont(QFont(QFontDatabase::applicationFontFamilies(0).at(0), 16));
-            _just_close_button->setText("Game View");
+            _just_close_button->setIconSize(_just_close_button->size());
+            _just_close_button->setIcon(QPixmap("picture/icon/blank_frame.png").scaled(_just_close_button->size()));
+
+            _label = new QLabel(_just_close_button);
+            _label->setGeometry(0, 0, _just_close_button->width(), _just_close_button->height());
+            _label->setAttribute(Qt::WA_TranslucentBackground);
+            _label->setFont(QFont(QFontDatabase::applicationFontFamilies(0).at(0), 16));
+            _label->setAlignment(Qt::AlignCenter);
+            _label->setText("Game View");
+
             connect(_just_close_button, &QPushButton::clicked, [this]()->void {
                 this->_parent->_music_player._choose_sound->play();
                 this->deleteLater();
                 _parent->set_option_menu(nullptr);
                 });
+            connect(_just_close_button, &HoverButton::enter, [=]()->void {
+                _just_close_button->setIcon(QPixmap("picture/icon/blank_frame_hover.png").scaled(_just_close_button->size()));
+                });
+            connect(_just_close_button, &HoverButton::leave, [=]()->void {
+                _just_close_button->setIcon(QPixmap("picture/icon/blank_frame.png").scaled(_just_close_button->size()));
+                });
 
             if (_parent->game_condition() == GamePause)
             {
-                _main_menu_button->setVisible(true);
+                _label->setVisible(true);
                 _just_close_button->setVisible(true);
             }
         }
@@ -833,6 +930,11 @@ private:
                 _button_load->setFlat(true);
                 _button_tutorial->setFlat(true);
 
+                _button_start->setStyleSheet("background:transparent");
+                _button_option->setStyleSheet("background:transparent");
+                _button_load->setStyleSheet("background:transparent");
+                _button_tutorial->setStyleSheet("background:transparent");
+
                 _button_start->setVisible(true);
                 _button_load->setVisible(true);
                 _button_option->setVisible(true);
@@ -889,12 +991,11 @@ private:
                     temp = new QLabel(sign);
                     temp->setGeometry(20, 240, 560, 280);
                     temp->setText("Press \"space\" when sword is above a block\n"
-                        "Just Remember these things:\n"
-                        "1, Don't touch orange blocks\n"
-                        "2, Don't make red/purple blocks access left\n"
-                        "3, Using special skill to knock back blocks\n"
-                        "4, Using \"esc\" to pause\n"
-                        "5, Different blocks have different functions\n"
+                        "Just Remember these things:\n"\
+                        "1, Don't make red/purple/black blocks access left\n"
+                        "2, Using 's' to trigger special skill to knock back blocks\n"
+                        "3, Using \"esc\" to pause\n"
+                        "4, Different blocks have different functions\n"
                         "please find block functions by yourself\n"
                         "Have fun :)");
                     temp->setVisible(true);
@@ -962,7 +1063,7 @@ private:
 
         bool _upgraded = 0;
         QLabel *_upgrade_menu = nullptr;
-        QPushButton *_upgrade_buttons[3] {};
+        HoverButton *_upgrade_buttons[3] {};
 
         QLabel *_stage_sign = nullptr;
         int _stage_small = 1;
@@ -974,7 +1075,7 @@ private:
 
         // 可用临时变量
         QLabel* _loader_sign = nullptr;
-        QPushButton* _loader_button = nullptr;
+        HoverButton* _loader_button = nullptr;
 
         QLabel* _trick = nullptr;
         int _trick_movement = 0, _trick_movement_change_count = 0;
@@ -1179,6 +1280,8 @@ private:
             _hero->set_health(game_setting._health);
             _hero->set_jumpnumber(game_setting._jumpnumber_on);
             _hero->set_hit_count(game_setting._hit_count);
+            if (game_setting._shield_on)
+                _hero->get_shield();
 
             _enemy = nullptr;
 
@@ -1388,23 +1491,37 @@ private:
             int rand_int = rand() % (Upgrade_Range_Max - Upgrade_Range_Min) + Upgrade_Range_Min;
             if (string_kind == RaiseBothAttack)
             {
-                rand_int -= 10;
+                rand_int -= log(_parent->_game_loader._hero->min_attack()) * log(_parent->_game_loader._hero->max_attack()) - 5;
+                if (rand_int < 10)
+                    rand_int = 10;
             }
-            if (string_kind == RaiseMaxAttack)
+            else if (string_kind == RaiseMaxHealth)
             {
-                rand_int -= -5 + log(_parent->_game_loader._hero->max_attack());
+                rand_int += 20 - log(_parent->_game_loader._hero->max_health()) * log(_parent->_game_loader._hero->max_health());
+                if (rand_int < 12)
+                    rand_int = 12;
             }
-            if (string_kind == RaiseMaxHealth)
+            else if (string_kind == RaiseMagicAttack)
             {
-                rand_int += 20 - log(_parent->_game_loader._hero->max_health());
+                rand_int -= log(_parent->_game_loader._hero->magic_attack()) * log(_parent->_game_loader._hero->magic_attack());
+                if (rand_int < 8)
+                    rand_int < 8;
             }
+
+            QLabel* label = new QLabel(button);
+            label->setGeometry(0, 0, button->width() - 63, button->height());
+            label->setAttribute(Qt::WA_TranslucentBackground);
+            label->setAlignment(Qt::AlignCenter);
+            label->setFont(QFont(QFontDatabase::applicationFontFamilies(0).at(0), 16));
+            label->setVisible(true);
+
             if (string_kind != Heal)
             {
-                button->setText(Upgrade_Strings[string_kind] + " " + QString::number(rand_int) + "%");
+                label->setText(Upgrade_Strings[string_kind] + " " + QString::number(rand_int) + "%");
             }
             else if (string_kind == Heal)
             {
-                button->setText(Upgrade_Strings[string_kind]);
+                label->setText(Upgrade_Strings[string_kind]);
             }
             switch (string_kind) {
             case RaiseMaxHealth:
@@ -1420,12 +1537,12 @@ private:
                     this->_upgraded = 1;
                 });
                 break;
-            case RaiseMaxAttack:
-                connect(button, &QPushButton::clicked, _hero, [=]()->void {
-                    _hero->upgrade_attack_high(rand_int / 100.0);
-                    this->_upgraded = 1;
-                });
-                break;
+            //case RaiseMaxAttack:
+            //    connect(button, &QPushButton::clicked, _hero, [=]()->void {
+            //        _hero->upgrade_attack_high(rand_int / 100.0);
+            //        this->_upgraded = 1;
+            //    });
+            //    break;
             case Heal:
                 connect(button, &QPushButton::clicked, _hero, [=]()->void {
                     _hero->perfect_heal();
@@ -1453,8 +1570,7 @@ private:
                 _upgrade_menu->setGeometry(Upgrade_Menu_X_Center - Upgrade_Menu_Width / 2, Upgrade_Menu_Y_Center - Upgrade_Menu_Height / 2,
                                            Upgrade_Menu_Width, Upgrade_Menu_Height);
                 _upgrade_menu->setVisible(true);
-                _upgrade_menu->setFrameStyle(QFrame::Box);
-                _upgrade_menu->setStyleSheet("background-color:rgb(188, 174, 69);");
+                _upgrade_menu->setPixmap(QPixmap("picture/icon/upgrade.png"));
 
 
                 bool vis[Upgrade_String_num] { };
@@ -1463,11 +1579,21 @@ private:
                 {
                     while (vis[choose = rand() % Upgrade_String_num]);
                     vis[choose] = 1;
-                    _upgrade_buttons[i] = new QPushButton(_parent);
+                    _upgrade_buttons[i] = new HoverButton(_parent);
                     _upgrade_buttons[i]->setGeometry(Upgrade_Button_X[i], Upgrade_Button_Y[i], Upgrade_Button_Width, Upgrade_Button_Height);
                     _upgrade_buttons[i]->setVisible(true);
-                    _upgrade_buttons[i]->setFont(QFont(QFontDatabase::applicationFontFamilies(0).at(0), 16));
                     set_upgrade_string(_upgrade_buttons[i], choose);
+                    _upgrade_buttons[i]->setIconSize(_upgrade_buttons[i]->size());
+                    _upgrade_buttons[i]->setIcon(QPixmap("picture/icon/blank_button.png"));
+                    _upgrade_buttons[i]->setFlat(true);
+                    _upgrade_buttons[i]->setStyleSheet("background:transparent");
+
+                    connect(_upgrade_buttons[i], &HoverButton::enter, [=]()-> void {
+                        _upgrade_buttons[i]->setIcon(QPixmap("picture/icon/blank_button_hover.png"));
+                        });
+                    connect(_upgrade_buttons[i], &HoverButton::leave, [=]()-> void {
+                        _upgrade_buttons[i]->setIcon(QPixmap("picture/icon/blank_button.png"));
+                        });
                 }
 
                 _upgraded = 0;
@@ -1510,6 +1636,7 @@ private:
             int code = rand() % Stage_Enemy[_stage_big].size();
             _enemy = load_enemy(Stage_Enemy[_stage_big][code]);
             _enemy->set_jumpnumber(_parent->jumpnumber_on());
+            _enemy->in_stage(_stage_big);
             BlockLoader *block_loader;
             for (int i = 0; i < _bar_count; i++)
             {
@@ -1543,18 +1670,36 @@ private:
         void game_won()
         {
             _loader_sign = new QLabel(_parent);
-            _loader_sign->setGeometry(200, 100, 600, 400);
-            _loader_sign->setStyleSheet("background-color:rgb(255,255,255)");
-            _loader_sign->setText("You have won the game!\n"
-                "thank you for playing!");
-            _loader_sign->setAlignment(Qt::AlignCenter);
-            _loader_sign->setFont(QFont(QFontDatabase::applicationFontFamilies(0).at(0), 30));
+            _loader_sign->setGeometry(0, 0, Main_Window_Width, Main_Window_Height);
+            _loader_sign->setPixmap(QPixmap("picture/icon/option.png"));
             _loader_sign->setVisible(true);
+
+            QLabel* label = new QLabel(_loader_sign);
+            label->setGeometry(200, 100, 600, 400);
+            label->setText("You have won the game!\n"
+                    "thank you for playing!");
+            label->setAlignment(Qt::AlignCenter);
+            label->setFont(QFont(QFontDatabase::applicationFontFamilies(0).at(0), 30));
+            label->setVisible(true);
             
-            _loader_button = new QPushButton(_parent);
+            _loader_button = new HoverButton(_parent);
             _loader_button->setGeometry(420, 470, 160, 50);
-            _loader_button->setText("Main Menu");
+            _loader_button->setIconSize(_loader_button->size());
+            _loader_button->setIcon(QPixmap("picture/icon/blank_frame.png").scaled(_loader_button->size()));
             _loader_button->setVisible(true);
+
+            connect(_loader_button, &HoverButton::enter, [=]()->void {
+                _loader_button->setIcon(QPixmap("picture/icon/blank_frame_hover.png").scaled(_loader_button->size()));
+                });
+            connect(_loader_button, &HoverButton::leave, [=]()->void {
+                _loader_button->setIcon(QPixmap("picture/icon/blank_frame.png").scaled(_loader_button->size()));
+                });
+
+            label = new QLabel(_loader_button); 
+            label->setGeometry(0, 0, _loader_button->width(), _loader_button->height());
+            label->setAlignment(Qt::AlignCenter);
+            label->setText("Main Menu");
+            label->setVisible(true);
 
             connect(_loader_button, &QPushButton::clicked, [this]()->void {
                 delete _loader_sign;
